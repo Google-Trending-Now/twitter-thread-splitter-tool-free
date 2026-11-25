@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadSplit — Twitter Thread Splitter Tool Free for X</title>
+  <meta name="description" content="Use ThreadSplit, a twitter thread splitter tool free for creators, with a live x post character counter thread preview, smart URL counting, and one-click copy." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://threadsplit.app/" />
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ThreadSplit" />
+  <meta property="og:title" content="ThreadSplit — Twitter Thread Splitter Tool Free for X" />
+  <meta property="og:description" content="Split long drafts into clean X threads automatically. Accurate 23-character t.co URL counting, emoji weighting, custom limits, and one-click copy." />
+  <meta property="og:url" content="https://threadsplit.app/" />
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ThreadSplit — Twitter Thread Splitter Tool Free for X" />
+  <meta name="twitter:description" content="Split long drafts into clean X threads with accurate t.co link counting, emoji handling, thread numbering, and instant preview cards." />
+
+  <!-- Inline Custom SVG Favicon (Clean Thread/Split Symbol) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F172A'/%3E%3Ccircle cx='20' cy='18' r='6' fill='%23FFFFFF'/%3E%3Cpath d='M20 27v10' stroke='%2338BDF8' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='46' r='6' fill='%2338BDF8'/%3E%3Cpath d='M33 18h15M33 27h10M33 43h15M33 50h11' stroke='%23FFFFFF' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+  <!-- Structured Data: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ThreadSplit",
+    "url": "https://threadsplit.app/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript. Works in all modern web browsers.",
+    "description": "A free Twitter thread splitter tool and live X post character counter thread editor with accurate t.co URL counting, emoji weighting, smart word-safe splitting, and local draft saving.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is this Twitter thread splitter tool free to use without an account?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. ThreadSplit is a twitter thread splitter tool free for everyone, with no signup, no paywall, and no daily post limits. Open the page, paste your draft, and copy your finished posts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the X post character counter thread engine count links and emojis?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every URL is counted as exactly 23 characters, matching how X wraps links through t.co regardless of how long the original web address is. Standard emojis, compound emojis like family icons or flags, and CJK characters each count as 2 characters, matching X's official counting rules."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will ThreadSplit ever cut a word in half between two posts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. In Smart Auto mode, the splitter looks for paragraph breaks first, then full sentences, and finally spaces between words. It keeps every word whole and reserves space for your thread numbering and optional thread emoji so posts stay under the limit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I control exactly where each post breaks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can place --- on its own line anywhere in Smart Auto mode to force a break, or switch to Blank Lines or Manual --- mode for full control. If a manual section goes over your character limit, the post counter turns red and tells you how many characters to trim."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is my draft stored? Do you save my writing on a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your writing stays on your own device. ThreadSplit runs entirely inside your browser and saves your draft and settings to localStorage so you will not lose work if you refresh the tab."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Prevent theme flash on saved dark mode preference (Light mode default) -->
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('threadsplit_theme_v1');
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch (e) {
+        // Ignore storage errors in restricted environments
+      }
+    })();
+  </script>
+
+  <style>
+    :root {
+      --bg-canvas: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-control: #f1f5f9;
+      --bg-control-active: #ffffff;
+      --bg-hover: #f1f5f9;
+
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+
+      --border-hairline: #e2e8f0;
+      --border-strong: #cbd5e1;
+
+      --accent: #0f172a;
+      --accent-hover: #1e293b;
+      --accent-fg: #ffffff;
+
+      --link-blue: #0284c7;
+      --focus-ring: #0284c7;
+
+      --status-ok-text: #475569;
+      --status-ok-bar: #0f172a;
+
+      --status-near-bg: #fffbeb;
+      --status-near-border: #fde68a;
+      --status-near-text: #b45309;
+      --status-near-bar: #d97706;
+
+      --status-over-bg: #fef2f2;
+      --status-over-border: #fecaca;
+      --status-over-text: #b91c1c;
+      --status-over-bar: #dc2626;
+
+      --status-success-bg: #f0fdf4;
+      --status-success-border: #bbf7d0;
+      --status-success-text: #15803d;
+
+      --thread-line: #cbd5e1;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html[data-theme="dark"] {
+      --bg-canvas: #0b0f17;
+      --bg-subtle: #111827;
+      --bg-surface: #111827;
+      --bg-control: #1e293b;
+      --bg-control-active: #0f172a;
+      --bg-hover: #1e293b;
+
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+
+      --border-hairline: #1f2937;
+      --border-strong: #334155;
+
+      --accent: #f8fafc;
+      --accent-hover: #e2e8f0;
+      --accent-fg: #0f172a;
+
+      --link-blue: #38bdf8;
+      --focus-ring: #38bdf8;
+
+      --status-ok-text: #94a3b8;
+      --status-ok-bar: #38bdf8;
+
+      --status-near-bg: rgba(217, 119, 6, 0.14);
+      --status-near-border: rgba(251, 191, 36, 0.35);
+      --status-near-text: #fbbf24;
+      --status-near-bar: #f59e0b;
+
+      --status-over-bg: rgba(220, 38, 38, 0.16);
+      --status-over-border: rgba(248, 113, 113, 0.4);
+      --status-over-text: #fca5a5;
+      --status-over-bar: #ef4444;
+
+      --status-success-bg: rgba(22, 163, 74, 0.16);
+      --status-success-border: rgba(74, 222, 128, 0.35);
+      --status-success-text: #86efac;
+
+      --thread-line: #334155;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    html[data-theme="dark"] body {
+      letter-spacing: 0.008em;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 8px;
+      z-index: 100;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: var(--accent-fg);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .skip-link:focus {
+      left: 16px;
+    }
+
+    /* Accessible focus outlines */
+    :focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* Header: Strict 1-row, 3-zone contract */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--bg-canvas);
+      border-bottom: 1px solid var(--border-hairline);
+      transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .header-inner {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: block;
+      border-radius: 6px;
+    }
+
+    html[data-theme="dark"] .brand-mark {
+      box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .site-nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 4px 0;
+      border-bottom: 1.5px solid transparent;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .site-nav a:hover {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-hover);
+      border-color: var(--border-strong);
+    }
+
+    .theme-toggle svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    /* Hero Intro */
+    .hero-section {
+      padding: 36px 0 24px;
+    }
+
+    .hero-header {
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .hero-header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.75rem, 2.8vw, 2.35rem);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      text-wrap: balance;
+      color: var(--text-primary);
+    }
+
+    .hero-intro {
+      margin: 0;
+      font-size: 15.5px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 65ch;
+    }
+
+    /* Workspace: Two-column desktop layout */
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .panel {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    /* Left Panel: Editor + Controls */
+    .editor-panel {
+      position: sticky;
+      top: 78px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .controls-bar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .control-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      min-width: 72px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      background-color: var(--bg-control);
+      border-radius: 8px;
+      gap: 2px;
+    }
+
+    .segmented button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      line-height: 1.2;
+      transition: background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .segmented button:hover {
+      color: var(--text-primary);
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background-color: var(--bg-control-active);
+      color: var(--text-primary);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .custom-limit-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .custom-limit-wrap[hidden] {
+      display: none;
+    }
+
+    .custom-limit-input {
+      width: 82px;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+    }
+
+    .select-control {
+      appearance: none;
+      -webkit-appearance: none;
+      height: 32px;
+      padding: 0 30px 0 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
+      background-color: var(--bg-canvas);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .select-control:hover {
+      border-color: var(--border-strong);
+    }
+
+    .checkbox-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .checkbox-toggle input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Textarea area */
+    .editor-body {
+      padding: 16px 20px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .draft-textarea {
+      width: 100%;
+      min-height: 380px;
+      resize: vertical;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 15.5px;
+      line-height: 1.65;
+      padding: 4px 0;
+    }
+
+    .draft-textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .editor-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .editor-hint {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .editor-hint code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background-color: var(--bg-control);
+      color: var(--text-primary);
+    }
+
+    .editor-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--accent-fg);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border-color: var(--border-hairline);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: var(--bg-hover);
+      border-color: var(--border-strong);
+    }
+
+    .btn-ghost {
+      background-color: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover:not(:disabled) {
+      background-color: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-copied {
+      background-color: var(--status-success-bg) !important;
+      border-color: var(--status-success-border) !important;
+      color: var(--status-success-text) !important;
+    }
+
+    /* Right Panel: Preview + Stats */
+    .preview-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .preview-toolbar {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stats-strip {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Warning summary banner when manual posts exceed limit */
+    .over-limit-alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background-color: var(--status-over-bg);
+      border: 1px solid var(--status-over-border);
+      color: var(--status-over-text);
+      font-size: 13.5px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .over-limit-alert[hidden] {
+      display: none;
+    }
+
+    /* Thread Preview Cards */
+    .thread-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .post-row {
+      position: relative;
+      display: flex;
+      gap: 14px;
+      padding-bottom: 14px;
+    }
+
+    .post-row:last-child {
+      padding-bottom: 0;
+    }
+
+    .post-gutter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 34px;
+      flex-shrink: 0;
+      padding-top: 16px;
+    }
+
+    .post-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: var(--bg-control);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .post-connector {
+      width: 2px;
+      flex: 1;
+      min-height: 18px;
+      margin-top: 6px;
+      background-color: var(--thread-line);
+      border-radius: 1px;
+    }
+
+    .post-row:last-child .post-connector {
+      display: none;
+    }
+
+    .post-card {
+      flex: 1;
+      min-width: 0;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .post-card[data-status="over"] {
+      border-color: var(--status-over-border);
+    }
+
+    .post-card-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      min-width: 0;
+    }
+
+    .post-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .post-card-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .char-badge {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--status-ok-text);
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .char-badge[data-status="near"] {
+      background-color: var(--status-near-bg);
+      border-color: var(--status-near-border);
+      color: var(--status-near-text);
+    }
+
+    .char-badge[data-status="over"] {
+      background-color: var(--status-over-bg);
+      border-color: var(--status-over-border);
+      color: var(--status-over-text);
+    }
+
+    .copy-post-btn {
+      height: 30px;
+      padding: 0 11px;
+      font-size: 12.5px;
+    }
+
+    .post-body {
+      padding: 14px 16px 16px;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .post-link {
+      color: var(--link-blue);
+      text-decoration: none;
+    }
+
+    .post-progress {
+      height: 2px;
+      width: 100%;
+      background-color: var(--bg-control);
+    }
+
+    .post-progress-fill {
+      height: 100%;
+      background-color: var(--status-ok-bar);
+      transition: width var(--transition-fast);
+    }
+
+    .post-card[data-status="near"] .post-progress-fill {
+      background-color: var(--status-near-bar);
+    }
+
+    .post-card[data-status="over"] .post-progress-fill {
+      background-color: var(--status-over-bar);
+    }
+
+    /* Empty State */
+    .empty-state {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 44px 28px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .empty-state h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .empty-state p {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 38ch;
+    }
+
+    /* Undo bar */
+    .undo-bar {
+      padding: 10px 16px;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    .undo-bar[hidden] {
+      display: none;
+    }
+
+    /* Editorial Sections Below Workspace */
+    .content-section {
+      padding: 64px 0;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .content-section:first-of-type {
+      margin-top: 56px;
+    }
+
+    .section-header {
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .section-header h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      text-wrap: balance;
+      color: var(--text-primary);
+    }
+
+    .section-header p {
+      margin: 0;
+      font-size: 15.5px;
+      color: var(--text-secondary);
+    }
+
+    /* 3-Column Editorial Grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    .step-item {
+      padding-top: 16px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .step-item h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .step-item p {
+      margin: 0;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    /* 2-Column Practical Benefits Grid */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .benefit-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+    }
+
+    .benefit-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .benefit-card p {
+      margin: 0;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    /* FAQ Accordion */
+    .faq-list {
+      max-width: 780px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .faq-item summary {
+      list-style: none;
+      padding: 18px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .faq-chevron {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      transition: transform var(--transition-fast);
+    }
+
+    .faq-item[open] .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      margin: 0;
+      padding: 0 0 20px;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 68ch;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border-hairline);
+      padding: 28px 0 36px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+      text-decoration: underline;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1023px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .editor-panel {
+        position: static;
+      }
+
+      .draft-textarea {
+        min-height: 240px;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 16px;
+      }
+
+      .header-inner {
+        height: 54px;
+        gap: 12px;
+      }
+
+      .site-nav {
+        display: none;
+      }
+
+      .theme-toggle {
+        min-height: 40px;
+      }
+
+      .hero-section {
+        padding: 24px 0 16px;
+      }
+
+      .controls-bar {
+        padding: 14px 16px;
+      }
+
+      .editor-body {
+        padding: 12px 16px 8px;
+      }
+
+      .editor-footer {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .editor-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .control-label {
+        min-width: 68px;
+      }
+
+      .preview-toolbar {
+        padding: 14px 16px;
+      }
+
+      .stats-strip {
+        gap: 14px 18px;
+      }
+
+      .post-row {
+        gap: 10px;
+      }
+
+      .post-gutter {
+        width: 28px;
+      }
+
+      .post-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 11.5px;
+      }
+
+      .btn {
+        min-height: 40px;
+      }
+
+      .copy-post-btn {
+        min-height: 36px;
+      }
+
+      .segmented button {
+        padding: 7px 9px;
+      }
+
+      .content-section {
+        padding: 44px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#draft-input" class="skip-link">Skip to thread editor</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand-link" id="top">
+        <svg class="brand-mark" width="24" height="24" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#0F172A"></rect>
+          <circle cx="20" cy="18" r="6" fill="#FFFFFF"></circle>
+          <path d="M20 27v10" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"></path>
+          <circle cx="20" cy="46" r="6" fill="#38BDF8"></circle>
+          <path d="M33 18h15M33 27h10M33 43h15M33 50h11" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"></path>
+        </svg>
+        <span>ThreadSplit</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#editor">Editor</a>
+        <a href="#how-to-use">How It Works</a>
+        <a href="#why-use">Why ThreadSplit</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <button type="button" id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Switch to dark mode">
+        <svg id="theme-icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="theme-icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span id="theme-toggle-label">Dark mode</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="editor" class="hero-section">
+      <div class="container">
+        <div class="hero-header">
+          <h1>A Twitter Thread Splitter Tool, Free and Built for Clean Drafts</h1>
+          <p class="hero-intro">
+            Paste your rough draft, essay, or newsletter notes below. This live X post character counter thread editor breaks your text into readable posts with accurate 23-character link counting, emoji weighting, and one-click copy.
+          </p>
+        </div>
+
+        <div class="workspace">
+          <!-- Left Column: Editor & Settings -->
+          <div class="panel editor-panel">
+            <div class="controls-bar" aria-label="Thread splitting options">
+              <div class="controls-row">
+                <div class="control-group">
+                  <span class="control-label" id="limit-group-label">Limit</span>
+                  <div class="segmented" role="group" aria-labelledby="limit-group-label">
+                    <button type="button" data-limit-preset="280" aria-pressed="true">280</button>
+                    <button type="button" data-limit-preset="4000" aria-pressed="false">Premium 4k</button>
+                    <button type="button" data-limit-preset="25000" aria-pressed="false">25k</button>
+                    <button type="button" data-limit-preset="custom" aria-pressed="false">Custom</button>
+                  </div>
+                  <div class="custom-limit-wrap" id="custom-limit-wrap" hidden>
+                    <label for="custom-limit-input" class="sr-only">Custom character limit</label>
+                    <input
+                      id="custom-limit-input"
+                      type="number"
+                      class="custom-limit-input"
+                      min="40"
+                      max="25000"
+                      step="10"
+                      value="500"
+                      inputmode="numeric"
+                    />
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <span class="control-label" id="split-group-label">Split</span>
+                  <div class="segmented" role="group" aria-labelledby="split-group-label">
+                    <button type="button" data-split-mode="smart" aria-pressed="true">Smart Auto</button>
+                    <button type="button" data-split-mode="manual-paragraph" aria-pressed="false">Blank Lines</button>
+                    <button type="button" data-split-mode="manual-dash" aria-pressed="false">Manual ---</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="controls-row">
+                <div class="control-group">
+                  <label for="numbering-select" class="control-label">Numbering</label>
+                  <select id="numbering-select" class="select-control">
+                    <option value="1/n">1/5</option>
+                    <option value="(1/n)">(1/5)</option>
+                    <option value="1/">1/</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+
+                <label class="checkbox-toggle">
+                  <input type="checkbox" id="thread-emoji-toggle" checked />
+                  <span>Add 🧵 to first post</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="editor-body">
+              <label for="draft-input" class="sr-only">Write or paste your thread text</label>
+              <textarea
+                id="draft-input"
+                class="draft-textarea"
+                placeholder="Write or paste your draft here. In Smart Auto mode, ThreadSplit breaks cleanly between paragraphs and sentences. Drop --- on a blank line anytime you want a manual break."
+                spellcheck="true"
+              ></textarea>
+            </div>
+
+            <div class="editor-footer">
+              <div class="editor-hint">
+                <span id="save-status">Saved locally</span>
+                <span aria-hidden="true">·</span>
+                <span>Use <code>---</code> to force a split</span>
+              </div>
+              <div class="editor-actions">
+                <button type="button" id="sample-btn" class="btn btn-ghost">Load Sample</button>
+                <button type="button" id="clear-btn" class="btn btn-secondary">Clear Text</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Summary & Thread Preview Cards -->
+          <div class="preview-column" aria-label="Live thread preview">
+            <div class="preview-toolbar">
+              <div class="stats-strip" role="status" aria-live="polite">
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-posts">0</span>
+                  <span class="stat-label">Posts</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-chars">0</span>
+                  <span class="stat-label">X Chars</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-words">0</span>
+                  <span class="stat-label">Words</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-read">0 sec</span>
+                  <span class="stat-label">Read Time</span>
+                </div>
+              </div>
+
+              <div class="preview-actions">
+                <button type="button" id="copy-all-btn" class="btn btn-primary" disabled>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="copy-all-label">Copy All</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="undo-bar" class="undo-bar" hidden>
+              <span>Draft cleared.</span>
+              <button type="button" id="undo-clear-btn" class="btn btn-secondary">Undo Clear</button>
+            </div>
+
+            <div id="over-limit-alert" class="over-limit-alert" role="alert" hidden>
+              <span id="over-limit-message"></span>
+              <button type="button" id="switch-smart-btn" class="btn btn-secondary">Auto-fit posts</button>
+            </div>
+
+            <div id="thread-preview" class="thread-list" data-testid="thread-preview"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-to-use" class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>How to Use This Twitter Thread Splitter Tool Free in 3 Steps</h2>
+          <p>Turn a long doc, blog section, or rough brain dump into publish-ready X posts without counting characters by hand.</p>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step-item">
+            <h3>01. Paste or write your full draft</h3>
+            <p>Drop your text straight from Google Docs, Notion, or Apple Notes into the editor. Your draft saves automatically to your browser, so an accidental refresh will not wipe out your edits.</p>
+          </article>
+          <article class="step-item">
+            <h3>02. Pick your split style and numbering</h3>
+            <p>Leave Smart Auto on to break cleanly on paragraphs and full sentences, or switch to Blank Lines or Manual --- for exact pacing. Choose 1/5, (1/5), 1/, or no numbers, and toggle the opening 🧵 marker.</p>
+          </article>
+          <article class="step-item">
+            <h3>03. Copy each post into X</h3>
+            <p>Check the live X-style preview cards on the right to catch awkward endings or amber and red limit warnings. Hit Copy Post on each card one by one, or use Copy All to export the entire sequence.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-use" class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Why Writers Rely on an X Post Character Counter Thread Workflow</h2>
+          <p>Writing directly inside X's composer makes it easy to lose drafts and hard to see pacing across an entire thread. ThreadSplit fixes the small annoyances that slow creators down.</p>
+        </div>
+
+        <div class="benefits-grid">
+          <article class="benefit-card">
+            <h3>Real t.co URL and emoji math</h3>
+            <p>A 110-character newsletter link only uses 23 characters on X, while a single flag or family emoji counts as 2. ThreadSplit uses X's actual counting rules so your posts never get rejected at the last second.</p>
+          </article>
+          <article class="benefit-card">
+            <h3>No mid-word cuts or broken hooks</h3>
+            <p>Generic text splitters chop sentences right through the middle of a word. ThreadSplit keeps words intact, respects sentence endings, and reserves room for your numbering before deciding where to break.</p>
+          </article>
+          <article class="benefit-card">
+            <h3>Built for Standard and X Premium limits</h3>
+            <p>Stick with classic 280-character posts for punchy threads, switch to 4,000 or 25,000 characters for X Premium long-form posts, or type any custom limit you prefer for tight readability.</p>
+          </article>
+          <article class="benefit-card">
+            <h3>Fast, private, and zero account walls</h3>
+            <p>Everything runs locally in vanilla JavaScript right inside your tab. There are no logins, no subscription upsells, and no external servers storing your unpublished ideas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Frequently Asked Questions</h2>
+          <p>Quick answers on character limits, manual splits, and how your drafts are handled.</p>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>
+              <h3>Is this Twitter thread splitter tool free to use without an account?</h3>
+              <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <p class="faq-answer">Yes. ThreadSplit is a twitter thread splitter tool free for everyone, with no signup, no paywall, and no daily post limits. Open the page, paste your draft, and copy your finished posts.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <h3>How does the X post character counter thread engine count links and emojis?</h3>
+              <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <p class="faq-answer">Every URL is counted as exactly 23 characters, matching how X wraps links through t.co regardless of how long the original web address is. Standard emojis, compound emojis like family icons or flags, and CJK characters each count as 2 characters, matching X's official counting rules.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <h3>Will ThreadSplit ever cut a word in half between two posts?</h3>
+              <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <p class="faq-answer">No. In Smart Auto mode, the splitter looks for paragraph breaks first, then full sentences, and finally spaces between words. It keeps every word whole and reserves space for your thread numbering and optional thread emoji so posts stay under the limit.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <h3>Can I control exactly where each post breaks?</h3>
+              <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <p class="faq-answer">Yes. You can place --- on its own line anywhere in Smart Auto mode to force a break, or switch to Blank Lines or Manual --- mode for full control. If a manual section goes over your character limit, the post counter turns red and tells you how many characters to trim.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <h3>Where is my draft stored? Do you save my writing on a server?</h3>
+              <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <p class="faq-answer">Your writing stays on your own device. ThreadSplit runs entirely inside your browser and saves your draft and settings to localStorage so you will not lose work if you refresh the tab.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>ThreadSplit · Free browser-based X thread splitter. Drafts stay on your device.</div>
+      <div class="footer-links">
+        <a href="#editor">Back to Editor</a>
+        <a href="#how-to-use">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* THREADSPLIT_ENGINE_START */
+      var TCO_URL_LENGTH = 23;
+
+      var URL_CANDIDATE_REGEX = /(?:https?:\/\/[^\s<>()]+|(?:www\.)?(?:[a-zA-Z0-9-]+\.)+(?:com|org|net|io|co|ai|dev|app|edu|gov|us|uk|ca|me|tv|gg|xyz|info|biz|news|media|tech|blog|store|shop|cloud|page|link|ly|be|gl|to|sh|so)(?:\/[^\s<>()]*)?)/gi;
+
+      var graphemeSegmenter =
+        typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function'
+          ? new Intl.Segmenter('en', { granularity: 'grapheme' })
+          : null;
+
+      function splitGraphemes(str) {
+        if (!str) return [];
+        if (graphemeSegmenter) {
+          var out = [];
+          var iter = graphemeSegmenter.segment(str);
+          for (var item of iter) {
+            out.push(item.segment);
+          }
+          return out;
+        }
+        return Array.from(str);
+      }
+
+      function isDoubleWidthGrapheme(grapheme) {
+        if (!grapheme) return false;
+        if (/[\p{Extended_Pictographic}\p{Regional_Indicator}]/u.test(grapheme)) {
+          return true;
+        }
+        if (grapheme.indexOf('\u20E3') !== -1) {
+          return true;
+        }
+        var cp = grapheme.codePointAt(0);
+        if (
+          (cp >= 0x1100 && cp <= 0x11ff) ||
+          (cp >= 0x2e80 && cp <= 0x9fff) ||
+          (cp >= 0xac00 && cp <= 0xd7af) ||
+          (cp >= 0xf900 && cp <= 0xfaff) ||
+          (cp >= 0xfe10 && cp <= 0xfe6f) ||
+          (cp >= 0xff00 && cp <= 0xff60) ||
+          (cp >= 0xffe0 && cp <= 0xffe6) ||
+          (cp >= 0x20000 && cp <= 0x2fa1f)
+        ) {
+          return true;
+        }
+        return false;
+      }
+
+      function stripTrailingPunctuation(url) {
+        var trimmed = url;
+        var trailing = '';
+        while (trimmed.length > 0) {
+          var lastChar = trimmed.charAt(trimmed.length - 1);
+          if (/[.,;:!?"'’”\]}]/.test(lastChar)) {
+            trailing = lastChar + trailing;
+            trimmed = trimmed.slice(0, -1);
+          } else if (lastChar === ')') {
+            var opens = (trimmed.match(/\(/g) || []).length;
+            var closes = (trimmed.match(/\)/g) || []).length;
+            if (closes > opens) {
+              trailing = lastChar + trailing;
+              trimmed = trimmed.slice(0, -1);
+            } else {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+        return { url: trimmed, trailing: trailing };
+      }
+
+      function tokenizeUrls(text) {
+        if (!text) return [];
+        var tokens = [];
+        var lastIndex = 0;
+        URL_CANDIDATE_REGEX.lastIndex = 0;
+        var match;
+
+        while ((match = URL_CANDIDATE_REGEX.exec(text)) !== null) {
+          var start = match.index;
+          var raw = match[0];
+
+          // Skip matches that are part of an email address or prefixed by word characters
+          if (start > 0) {
+            var prevChar = text.charAt(start - 1);
+            if (/[a-zA-Z0-9_@.]/.test(prevChar)) {
+              continue;
+            }
+          }
+
+          var cleaned = stripTrailingPunctuation(raw);
+          if (!cleaned.url || cleaned.url.indexOf('.') === -1) {
+            continue;
+          }
+
+          if (start > lastIndex) {
+            tokens.push({ type: 'text', value: text.slice(lastIndex, start) });
+          }
+
+          tokens.push({ type: 'url', value: cleaned.url });
+          lastIndex = start + cleaned.url.length;
+          URL_CANDIDATE_REGEX.lastIndex = lastIndex;
+        }
+
+        if (lastIndex < text.length) {
+          tokens.push({ type: 'text', value: text.slice(lastIndex) });
+        }
+
+        return tokens;
+      }
+
+      function countXChars(text) {
+        if (!text) return 0;
+        var tokens = tokenizeUrls(text);
+        var total = 0;
+        for (var i = 0; i < tokens.length; i++) {
+          var token = tokens[i];
+          if (token.type === 'url') {
+            total += TCO_URL_LENGTH;
+          } else {
+            var graphemes = splitGraphemes(token.value);
+            for (var g = 0; g < graphemes.length; g++) {
+              total += isDoubleWidthGrapheme(graphemes[g]) ? 2 : 1;
+            }
+          }
+        }
+        return total;
+      }
+
+      function formatNumbering(index, total, style) {
+        if (style === 'none') return '';
+        if (style === '(1/n)') return '(' + index + '/' + total + ')';
+        if (style === '1/') return index + '/';
+        return index + '/' + total;
+      }
+
+      function buildPostSuffix(body, index, total, options) {
+        var parts = [];
+        if (index === 1 && options.addThreadEmoji) {
+          if (!/🧵\s*$/.test(body)) {
+            parts.push('🧵');
+          }
+        }
+        var num = formatNumbering(index, total, options.numberingStyle);
+        if (num) {
+          parts.push(num);
+        }
+        return parts.join(' ');
+      }
+
+      function decoratePost(body, index, total, options) {
+        var cleanBody = body.trim();
+        var suffix = buildPostSuffix(cleanBody, index, total, options);
+        if (!suffix) return cleanBody;
+        if (!cleanBody) return suffix;
+        return cleanBody + ' ' + suffix;
+      }
+
+      function getSuffixOverhead(index, estimatedTotal, options) {
+        var parts = [];
+        if (index === 1 && options.addThreadEmoji) {
+          parts.push('🧵');
+        }
+        var num = formatNumbering(index, estimatedTotal, options.numberingStyle);
+        if (num) {
+          parts.push(num);
+        }
+        if (parts.length === 0) return 0;
+        return countXChars(' ' + parts.join(' '));
+      }
+
+      function splitSentences(paragraph) {
+        // Protect URLs so periods inside links never trigger sentence splits
+        var tokens = tokenizeUrls(paragraph);
+        var urlMap = [];
+        var masked = '';
+        for (var i = 0; i < tokens.length; i++) {
+          if (tokens[i].type === 'url') {
+            var placeholder = '\uE000URL' + urlMap.length + '\uE001';
+            urlMap.push(tokens[i].value);
+            masked += placeholder;
+          } else {
+            masked += tokens[i].value;
+          }
+        }
+
+        // Split lines inside a single paragraph first, preserving explicit line breaks
+        var rawLines = masked.split('\n');
+        var sentences = [];
+        var abbrRegex = /\b(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|etc|e\.g|i\.e|U\.S|U\.K|Inc|Ltd|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\.$/i;
+
+        for (var l = 0; l < rawLines.length; l++) {
+          var line = rawLines[l].trim();
+          if (!line) continue;
+
+          var parts = line.split(/(\s+)/);
+          var current = '';
+          for (var p = 0; p < parts.length; p++) {
+            var seg = parts[p];
+            if (/^\s+$/.test(seg)) {
+              if (current) {
+                var trimmed = current.trim();
+                var endsSentence = /[.!?]["'”’)\]]*$/.test(trimmed) && !abbrRegex.test(trimmed);
+                if (endsSentence) {
+                  sentences.push({ text: trimmed, joinWith: ' ' });
+                  current = '';
+                } else {
+                  current += seg;
+                }
+              }
+            } else {
+              current += seg;
+            }
+          }
+          if (current.trim()) {
+            sentences.push({
+              text: current.trim(),
+              joinWith: l < rawLines.length - 1 ? '\n' : ' '
+            });
+          }
+        }
+
+        // Restore URLs
+        return sentences.map(function (item) {
+          var restored = item.text.replace(/\uE000URL(\d+)\uE001/g, function (_, idx) {
+            return urlMap[Number(idx)];
+          });
+          return { text: restored, joinWith: item.joinWith };
+        });
+      }
+
+      function packSmartPass(sections, limit, estimatedTotal, options) {
+        var chunks = [];
+        var current = '';
+
+        function currentBudget() {
+          var nextIdx = chunks.length + 1;
+          var overhead = getSuffixOverhead(nextIdx, estimatedTotal, options);
+          return Math.max(1, limit - overhead);
+        }
+
+        function flush() {
+          if (current.trim()) {
+            chunks.push(current.trim());
+          }
+          current = '';
+        }
+
+        function appendWordSafe(text) {
+          var words = text.split(/\s+/).filter(Boolean);
+          for (var w = 0; w < words.length; w++) {
+            var word = words[w];
+            var candidate = current ? current + ' ' + word : word;
+            if (countXChars(candidate) <= currentBudget()) {
+              current = candidate;
+            } else {
+              if (current) {
+                flush();
+              }
+              // Never break a word in half: keep unbroken word intact in its own post
+              current = word;
+              if (countXChars(current) > currentBudget()) {
+                flush();
+              }
+            }
+          }
+        }
+
+        for (var s = 0; s < sections.length; s++) {
+          var section = sections[s].trim();
+          if (!section) continue;
+
+          if (s > 0) {
+            flush();
+          }
+
+          var paragraphs = section.split(/\n{2,}/).map(function (p) {
+            return p.trim();
+          }).filter(Boolean);
+
+          for (var p = 0; p < paragraphs.length; p++) {
+            var para = paragraphs[p];
+            var paraCandidate = current ? current + '\n\n' + para : para;
+
+            if (countXChars(paraCandidate) <= currentBudget()) {
+              current = paraCandidate;
+              continue;
+            }
+
+            if (current) {
+              flush();
+            }
+
+            if (countXChars(para) <= currentBudget()) {
+              current = para;
+              continue;
+            }
+
+            // Paragraph exceeds single post budget: split by sentences
+            var sentences = splitSentences(para);
+            var prevJoin = ' ';
+
+            for (var sn = 0; sn < sentences.length; sn++) {
+              var sentence = sentences[sn].text;
+              var sep = current ? prevJoin : '';
+              var sentCandidate = current ? current + sep + sentence : sentence;
+
+              if (countXChars(sentCandidate) <= currentBudget()) {
+                current = sentCandidate;
+              } else {
+                if (current) {
+                  flush();
+                }
+                if (countXChars(sentence) <= currentBudget()) {
+                  current = sentence;
+                } else {
+                  appendWordSafe(sentence);
+                }
+              }
+
+              prevJoin = sentences[sn].joinWith || ' ';
+            }
+          }
+        }
+
+        flush();
+        return chunks;
+      }
+
+      function getPostStatus(charCount, limit) {
+        if (charCount > limit) return 'over';
+        var nearThreshold = Math.max(1, limit - Math.max(20, Math.round(limit * 0.1)));
+        if (charCount >= nearThreshold) return 'near';
+        return 'ok';
+      }
+
+      function splitThread(rawText, options) {
+        var opts = Object.assign(
+          {
+            limit: 280,
+            splitMode: 'smart',
+            numberingStyle: '1/n',
+            addThreadEmoji: true
+          },
+          options || {}
+        );
+
+        var limit = Math.max(40, Math.min(25000, Number(opts.limit) || 280));
+        var normalized = String(rawText || '').replace(/\r\n?/g, '\n').trim();
+        if (!normalized) return [];
+
+        var rawChunks = [];
+
+        if (opts.splitMode === 'manual-dash') {
+          rawChunks = normalized
+            .split(/(?:^|\n)[ \t]*---+[ \t]*(?:\n|$)/)
+            .map(function (c) { return c.trim(); })
+            .filter(Boolean);
+        } else if (opts.splitMode === 'manual-paragraph') {
+          rawChunks = normalized
+            .split(/\n[ \t]*\n+/)
+            .map(function (c) { return c.trim(); })
+            .filter(Boolean);
+        } else {
+          // Smart Auto mode also honors explicit --- hard breaks
+          var sections = normalized
+            .split(/(?:^|\n)[ \t]*---+[ \t]*(?:\n|$)/)
+            .map(function (c) { return c.trim(); })
+            .filter(Boolean);
+
+          var estimatedTotal = Math.max(1, sections.length);
+          for (var pass = 0; pass < 4; pass++) {
+            rawChunks = packSmartPass(sections, limit, estimatedTotal, opts);
+            if (rawChunks.length === estimatedTotal) {
+              break;
+            }
+            estimatedTotal = Math.max(1, rawChunks.length);
+          }
+        }
+
+        var total = rawChunks.length;
+        return rawChunks.map(function (body, idx) {
+          var index = idx + 1;
+          var text = decoratePost(body, index, total, opts);
+          var charCount = countXChars(text);
+          var status = getPostStatus(charCount, limit);
+          return {
+            index: index,
+            total: total,
+            text: text,
+            charCount: charCount,
+            limit: limit,
+            remaining: limit - charCount,
+            status: status
+          };
+        });
+      }
+
+      function computeStats(rawText, posts) {
+        var trimmed = String(rawText || '').trim();
+        var words = trimmed ? trimmed.split(/\s+/).filter(Boolean).length : 0;
+        var totalPosts = Array.isArray(posts) ? posts.length : 0;
+        var totalChars = 0;
+        for (var i = 0; i < totalPosts; i++) {
+          totalChars += posts[i].charCount;
+        }
+
+        var readingTimeLabel = '0 sec';
+        if (words > 0) {
+          var seconds = Math.max(1, Math.round((words / 225) * 60));
+          if (seconds < 60) {
+            readingTimeLabel = seconds + ' sec';
+          } else {
+            var mins = Math.ceil(seconds / 60);
+            readingTimeLabel = mins + ' min';
+          }
+        }
+
+        return {
+          totalPosts: totalPosts,
+          totalChars: totalChars,
+          totalWords: words,
+          readingTimeLabel: readingTimeLabel
+        };
+      }
+      /* THREADSPLIT_ENGINE_END */
+
+      // --- UI State & Storage ---
+      var STORAGE_KEY = 'threadsplit_state_v1';
+      var THEME_KEY = 'threadsplit_theme_v1';
+
+      var SAMPLE_DRAFT =
+        'Most X threads lose readers by post two—not because the idea is weak, but because a sentence gets chopped in half or a long link throws off the character count.\n\n' +
+        'Here is a faster way to edit long-form threads before you hit publish. Write the whole draft in one place, read it out loud, and let the breaks fall on natural pauses instead of cramming words into 280 characters.\n\n' +
+        'One quirk writers forget: X wraps every link through t.co, so https://threadsplit.app/guides/writing-clear-x-threads-without-losing-readers counts as 23 characters—no matter how long the URL looks. Emojis like 🚀 and 🇺🇸 count as 2 characters each.\n\n' +
+        'Want an exact break right before your closing call to action? Drop three dashes on a new line.\n\n' +
+        '---\n\n' +
+        'Try editing this draft, switching numbering styles above, or pasting your own notes. Everything stays in your browser and copies in one click.';
+
+      var state = {
+        text: SAMPLE_DRAFT,
+        limitPreset: '280',
+        customLimit: 500,
+        splitMode: 'smart',
+        numberingStyle: '1/n',
+        addThreadEmoji: true
+      };
+
+      var lastClearedText = null;
+      var copyTimers = new WeakMap();
+
+      // DOM elements
+      var draftInput = document.getElementById('draft-input');
+      var limitButtons = document.querySelectorAll('[data-limit-preset]');
+      var customLimitWrap = document.getElementById('custom-limit-wrap');
+      var customLimitInput = document.getElementById('custom-limit-input');
+      var splitButtons = document.querySelectorAll('[data-split-mode]');
+      var numberingSelect = document.getElementById('numbering-select');
+      var threadEmojiToggle = document.getElementById('thread-emoji-toggle');
+      var sampleBtn = document.getElementById('sample-btn');
+      var clearBtn = document.getElementById('clear-btn');
+      var copyAllBtn = document.getElementById('copy-all-btn');
+      var copyAllLabel = document.getElementById('copy-all-label');
+      var saveStatus = document.getElementById('save-status');
+      var statPosts = document.getElementById('stat-posts');
+      var statChars = document.getElementById('stat-chars');
+      var statWords = document.getElementById('stat-words');
+      var statRead = document.getElementById('stat-read');
+      var threadPreview = document.getElementById('thread-preview');
+      var undoBar = document.getElementById('undo-bar');
+      var undoClearBtn = document.getElementById('undo-clear-btn');
+      var overLimitAlert = document.getElementById('over-limit-alert');
+      var overLimitMessage = document.getElementById('over-limit-message');
+      var switchSmartBtn = document.getElementById('switch-smart-btn');
+      var liveAnnouncer = document.getElementById('live-announcer');
+
+      // Theme toggle elements
+      var themeToggle = document.getElementById('theme-toggle');
+      var themeIconMoon = document.getElementById('theme-icon-moon');
+      var themeIconSun = document.getElementById('theme-icon-sun');
+      var themeToggleLabel = document.getElementById('theme-toggle-label');
+
+      function announce(msg) {
+        if (!liveAnnouncer) return;
+        liveAnnouncer.textContent = '';
+        window.setTimeout(function () {
+          liveAnnouncer.textContent = msg;
+        }, 20);
+      }
+
+      function getActiveLimit() {
+        if (state.limitPreset === 'custom') {
+          var val = parseInt(state.customLimit, 10);
+          if (isNaN(val)) return 280;
+          return Math.max(40, Math.min(25000, val));
+        }
+        return parseInt(state.limitPreset, 10) || 280;
+      }
+
+      function loadState() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          var parsed = JSON.parse(raw);
+          if (typeof parsed.text === 'string') state.text = parsed.text;
+          if (['280', '4000', '25000', 'custom'].indexOf(parsed.limitPreset) !== -1) {
+            state.limitPreset = parsed.limitPreset;
+          }
+          if (typeof parsed.customLimit === 'number' && parsed.customLimit >= 40) {
+            state.customLimit = Math.min(25000, Math.round(parsed.customLimit));
+          }
+          if (['smart', 'manual-paragraph', 'manual-dash'].indexOf(parsed.splitMode) !== -1) {
+            state.splitMode = parsed.splitMode;
+          }
+          if (['1/n', '(1/n)', '1/', 'none'].indexOf(parsed.numberingStyle) !== -1) {
+            state.numberingStyle = parsed.numberingStyle;
+          }
+          if (typeof parsed.addThreadEmoji === 'boolean') {
+            state.addThreadEmoji = parsed.addThreadEmoji;
+          }
+        } catch (e) {
+          // Ignore malformed local storage
+        }
+      }
+
+      function persistState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          saveStatus.textContent = state.text.trim() ? 'Draft saved locally' : 'Local storage ready';
+        } catch (e) {
+          saveStatus.textContent = 'Local storage unavailable';
+        }
+      }
+
+      function syncControlsFromState() {
+        draftInput.value = state.text;
+
+        limitButtons.forEach(function (btn) {
+          var active = btn.getAttribute('data-limit-preset') === state.limitPreset;
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        customLimitWrap.hidden = state.limitPreset !== 'custom';
+        customLimitInput.value = String(state.customLimit);
+
+        splitButtons.forEach(function (btn) {
+          var active = btn.getAttribute('data-split-mode') === state.splitMode;
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        numberingSelect.value = state.numberingStyle;
+        threadEmojiToggle.checked = state.addThreadEmoji;
+      }
+
+      function copyTextToClipboard(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          return navigator.clipboard.writeText(text).catch(function () {
+            return fallbackCopy(text);
+          });
+        }
+        return Promise.resolve(fallbackCopy(text));
+      }
+
+      function fallbackCopy(text) {
+        var helper = document.createElement('textarea');
+        helper.value = text;
+        helper.setAttribute('readonly', '');
+        helper.style.position = 'fixed';
+        helper.style.left = '-9999px';
+        document.body.appendChild(helper);
+        helper.select();
+        try {
+          document.execCommand('copy');
+        } catch (e) {
+          // Ignore clipboard fallback error
+        }
+        document.body.removeChild(helper);
+      }
+
+      function flashButtonCopied(btn, labelEl, copiedText, originalText) {
+        if (copyTimers.has(btn)) {
+          window.clearTimeout(copyTimers.get(btn));
+        }
+        btn.classList.add('btn-copied');
+        labelEl.textContent = copiedText;
+        var timer = window.setTimeout(function () {
+          btn.classList.remove('btn-copied');
+          labelEl.textContent = originalText;
+          copyTimers.delete(btn);
+        }, 1800);
+        copyTimers.set(btn, timer);
+      }
+
+      function renderFormattedPostBody(container, text) {
+        var tokens = tokenizeUrls(text);
+        for (var i = 0; i < tokens.length; i++) {
+          var tok = tokens[i];
+          if (tok.type === 'url') {
+            var span = document.createElement('span');
+            span.className = 'post-link';
+            span.title = 'Counted as 23 characters (X t.co link)';
+            span.textContent = tok.value;
+            container.appendChild(span);
+          } else {
+            container.appendChild(document.createTextNode(tok.value));
+          }
+        }
+      }
+
+      function buildBadgeText(post) {
+        var base = post.charCount + ' / ' + post.limit;
+        if (post.status === 'over') {
+          return base + ' · +' + Math.abs(post.remaining) + ' over';
+        }
+        if (post.status === 'near') {
+          return base + ' · ' + post.remaining + ' left';
+        }
+        return base;
+      }
+
+      var currentPosts = [];
+
+      function render() {
+        var limit = getActiveLimit();
+        currentPosts = splitThread(state.text, {
+          limit: limit,
+          splitMode: state.splitMode,
+          numberingStyle: state.numberingStyle,
+          addThreadEmoji: state.addThreadEmoji
+        });
+
+        var stats = computeStats(state.text, currentPosts);
+        statPosts.textContent = String(stats.totalPosts);
+        statChars.textContent = String(stats.totalChars);
+        statWords.textContent = String(stats.totalWords);
+        statRead.textContent = stats.readingTimeLabel;
+
+        copyAllBtn.disabled = currentPosts.length === 0;
+        clearBtn.disabled = state.text.length === 0;
+
+        var overCount = currentPosts.filter(function (p) {
+          return p.status === 'over';
+        }).length;
+
+        if (overCount > 0) {
+          overLimitAlert.hidden = false;
+          overLimitMessage.textContent =
+            overCount === 1
+              ? '1 post exceeds the ' + limit + '-character limit.'
+              : overCount + ' posts exceed the ' + limit + '-character limit.';
+          switchSmartBtn.hidden = state.splitMode === 'smart';
+        } else {
+          overLimitAlert.hidden = true;
+        }
+
+        threadPreview.textContent = '';
+
+        if (currentPosts.length === 0) {
+          var empty = document.createElement('div');
+          empty.className = 'empty-state';
+
+          var emptyHeading = document.createElement('h3');
+          emptyHeading.textContent = 'Your thread preview will appear here';
+
+          var emptyText = document.createElement('p');
+          emptyText.textContent =
+            'Start typing or paste a draft on the left to split it into numbered X posts in real time.';
+
+          var emptyBtn = document.createElement('button');
+          emptyBtn.type = 'button';
+          emptyBtn.className = 'btn btn-secondary';
+          emptyBtn.textContent = 'Load Sample Thread';
+          emptyBtn.addEventListener('click', loadSampleDraft);
+
+          empty.appendChild(emptyHeading);
+          empty.appendChild(emptyText);
+          empty.appendChild(emptyBtn);
+          threadPreview.appendChild(empty);
+          return;
+        }
+
+        var fragment = document.createDocumentFragment();
+
+        for (var i = 0; i < currentPosts.length; i++) {
+          (function (post) {
+            var row = document.createElement('div');
+            row.className = 'post-row';
+
+            // Left timeline gutter
+            var gutter = document.createElement('div');
+            gutter.className = 'post-gutter';
+            gutter.setAttribute('aria-hidden', 'true');
+
+            var avatar = document.createElement('div');
+            avatar.className = 'post-avatar';
+            avatar.textContent = String(post.index);
+
+            var connector = document.createElement('div');
+            connector.className = 'post-connector';
+
+            gutter.appendChild(avatar);
+            gutter.appendChild(connector);
+
+            // Card article
+            var card = document.createElement('article');
+            card.className = 'post-card';
+            card.setAttribute('data-status', post.status);
+            card.setAttribute('aria-label', 'Post ' + post.index + ' of ' + post.total);
+
+            var head = document.createElement('div');
+            head.className = 'post-card-head';
+
+            var meta = document.createElement('div');
+            meta.className = 'post-meta';
+
+            var title = document.createElement('span');
+            title.className = 'post-title';
+            title.textContent = 'Post ' + post.index + ' of ' + post.total;
+
+            meta.appendChild(title);
+
+            var controls = document.createElement('div');
+            controls.className = 'post-card-controls';
+
+            var badge = document.createElement('span');
+            badge.className = 'char-badge';
+            badge.setAttribute('data-status', post.status);
+            badge.textContent = buildBadgeText(post);
+
+            var copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'btn btn-secondary copy-post-btn';
+            copyBtn.setAttribute('aria-label', 'Copy Post ' + post.index);
+
+            var copyLabel = document.createElement('span');
+            copyLabel.textContent = 'Copy Post';
+            copyBtn.appendChild(copyLabel);
+
+            copyBtn.addEventListener('click', function () {
+              copyTextToClipboard(post.text).then(function () {
+                flashButtonCopied(copyBtn, copyLabel, 'Copied!', 'Copy Post');
+                announce('Copied post ' + post.index + ' of ' + post.total);
+              });
+            });
+
+            controls.appendChild(badge);
+            controls.appendChild(copyBtn);
+
+            head.appendChild(meta);
+            head.appendChild(controls);
+
+            var body = document.createElement('div');
+            body.className = 'post-body';
+            renderFormattedPostBody(body, post.text);
+
+            var progress = document.createElement('div');
+            progress.className = 'post-progress';
+            progress.setAttribute('aria-hidden', 'true');
+
+            var fill = document.createElement('div');
+            fill.className = 'post-progress-fill';
+            var pct = Math.min(100, Math.round((post.charCount / post.limit) * 100));
+            fill.style.width = pct + '%';
+            progress.appendChild(fill);
+
+            card.appendChild(head);
+            card.appendChild(body);
+            card.appendChild(progress);
+
+            row.appendChild(gutter);
+            row.appendChild(card);
+            fragment.appendChild(row);
+          })(currentPosts[i]);
+        }
+
+        threadPreview.appendChild(fragment);
+      }
+
+      function loadSampleDraft() {
+        state.text = SAMPLE_DRAFT;
+        lastClearedText = null;
+        undoBar.hidden = true;
+        draftInput.value = state.text;
+        persistState();
+        render();
+        draftInput.focus();
+      }
+
+      // Theme switching
+      function applyTheme(theme) {
+        var isDark = theme === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggleLabel.textContent = isDark ? 'Light mode' : 'Dark mode';
+        if (isDark) {
+          themeIconMoon.setAttribute('hidden', '');
+          themeIconSun.removeAttribute('hidden');
+        } else {
+          themeIconMoon.removeAttribute('hidden');
+          themeIconSun.setAttribute('hidden', '');
+        }
+        try {
+          localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+        } catch (e) {
+          // Ignore storage errors
+        }
+      }
+
+      themeToggle.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      // Editor & control listeners
+      draftInput.addEventListener('input', function () {
+        state.text = draftInput.value;
+        if (state.text.length > 0 && !undoBar.hidden) {
+          undoBar.hidden = true;
+          lastClearedText = null;
+        }
+        persistState();
+        render();
+      });
+
+      limitButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          state.limitPreset = btn.getAttribute('data-limit-preset') || '280';
+          syncControlsFromState();
+          persistState();
+          render();
+          if (state.limitPreset === 'custom') {
+            customLimitInput.focus();
+            customLimitInput.select();
+          }
+        });
+      });
+
+      customLimitInput.addEventListener('input', function () {
+        var parsed = parseInt(customLimitInput.value, 10);
+        if (!isNaN(parsed)) {
+          state.customLimit = Math.max(40, Math.min(25000, parsed));
+          persistState();
+          render();
+        }
+      });
+
+      customLimitInput.addEventListener('blur', function () {
+        customLimitInput.value = String(state.customLimit);
+      });
+
+      splitButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          state.splitMode = btn.getAttribute('data-split-mode') || 'smart';
+          syncControlsFromState();
+          persistState();
+          render();
+        });
+      });
+
+      numberingSelect.addEventListener('change', function () {
+        state.numberingStyle = numberingSelect.value;
+        persistState();
+        render();
+      });
+
+      threadEmojiToggle.addEventListener('change', function () {
+        state.addThreadEmoji = threadEmojiToggle.checked;
+        persistState();
+        render();
+      });
+
+      sampleBtn.addEventListener('click', loadSampleDraft);
+
+      clearBtn.addEventListener('click', function () {
+        if (!state.text) return;
+        lastClearedText = state.text;
+        state.text = '';
+        draftInput.value = '';
+        undoBar.hidden = false;
+        persistState();
+        render();
+        announce('Draft cleared');
+      });
+
+      undoClearBtn.addEventListener('click', function () {
+        if (lastClearedText === null) return;
+        state.text = lastClearedText;
+        lastClearedText = null;
+        undoBar.hidden = true;
+        draftInput.value = state.text;
+        persistState();
+        render();
+        announce('Draft restored');
+      });
+
+      switchSmartBtn.addEventListener('click', function () {
+        state.splitMode = 'smart';
+        syncControlsFromState();
+        persistState();
+        render();
+      });
+
+      copyAllBtn.addEventListener('click', function () {
+        if (currentPosts.length === 0) return;
+        var combined = currentPosts
+          .map(function (p) {
+            return p.text;
+          })
+          .join('\n\n---\n\n');
+
+        copyTextToClipboard(combined).then(function () {
+          flashButtonCopied(copyAllBtn, copyAllLabel, 'Copied All!', 'Copy All');
+          announce('Copied all ' + currentPosts.length + ' posts');
+        });
+      });
+
+      // Initialize
+      var initialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(initialTheme);
+      loadState();
+      syncControlsFromState();
+      render();
+    })();
+  </script>
+</body>
+</html>
